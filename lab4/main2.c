@@ -4,6 +4,7 @@
 #define BUFFER_SIZE 20
 #define FORMAT_STR ("%19[^\n]")
 
+
 void remove_duplicates(char *str) {
   if (str == NULL) {
     return;
