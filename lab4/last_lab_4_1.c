@@ -2,8 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#define BUFFER_SIZE 20
-#define FORMAT_STR ("%19[^\n]s")
 #include "myreadline.h"
 #include "my_isspace.h"
 #include "mystrlen.h"
@@ -90,8 +88,9 @@ void my_task() {
     char *str;
     int t = 0;
     do {
-        t = myreadline("input string:", &str);
-        if (t > 0 && str != NULL) {
+        t = myreadline_char("input string:", &str);
+        printf("debug t=%d, str=\"%s\"\n", t, str);
+        if (t >= 0 && str != NULL) {
             printf("before: \"%s\"\n", str);
             strip_string(str);
             printf("after:  \"%s\"\n", str);
@@ -99,7 +98,7 @@ void my_task() {
             remove_duplicates(str);
 	    clock_t end = clock();
             double elapsed_time = (end - start) / (double)CLOCKS_PER_SEC;
-  	    printf("time: %.10lf", elapsed_time);
+  	    printf("time: %.10lf\n", elapsed_time);
             printf("my task:  \"%s\"\n", str);
        }
 	free(str);

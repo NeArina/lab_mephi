@@ -4,11 +4,40 @@
 #include <stdlib.h>
 #include "mystrlen.h"
 #include <stdio.h>
+#include <string.h>
+
+int myreadline_char(char *p_str, char **ppstr) {
+    printf("%s", p_str);
+
+    char str[80];
+    int j = 0;
+    char c = 0;
+
+    while (c != '\n' && j < 80 - 1) {
+        int t = scanf("%c", &c);
+        if (t == EOF) {
+            str[j] = 0;
+            *ppstr = (char*)malloc(sizeof(char) * mystrlen(str));
+            strcpy(*ppstr, str);
+            return EOF;
+        } 
+
+        if (c != '\n') {
+            str[j++] = c;
+        }
+    }
+
+    str[j] = 0;
+    *ppstr = (char*)malloc(sizeof(char) * mystrlen(str));
+    strcpy(*ppstr, str);
+    return mystrlen(str);
+}
 
 int myreadline(char *p_str, char **ppstr) {
     printf("%s", p_str);
 
-    //char buffer[20];
+    char buffer[20];
+    const int bufSize = 20;
 
     int size = 20; //////buffer
     int curSize = 0;
@@ -25,13 +54,17 @@ int myreadline(char *p_str, char **ppstr) {
     do {
       
         // lfkjjhdjghjd25451248________________________
-        t = scanf("%19[^\n]", str + curSize);
+        t = scanf("%19[^\n]", buffer);
+        
         if (t == EOF) {
             *ppstr = str;
             return EOF;
         }
-        str_ended = str[curSize] == 0;
-        curSize += mystrlen(str + curSize);
+        printf("buffer = \"%s\"", buffer);
+        str_ended = buffer[0] == 0;
+        strcpy(str + curSize, buffer);
+        buffer[0] = 0;
+        curSize = mystrlen(str);
         if (curSize + 20 >= size) {
             size += 20;
             str = realloc(str, sizeof(char) * size);
@@ -42,5 +75,6 @@ int myreadline(char *p_str, char **ppstr) {
     *ppstr = str;
     char c; /// зацикливание 
     scanf("%c", &c);
+    printf("%c = %d", c, (int)c);
     return curSize;
 }
