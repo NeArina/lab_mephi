@@ -7,7 +7,7 @@
 #include "myreadline.h"
 #include "my_isspace.h"
 #include "mystrlen.h"
-
+// my func
 void remove_duplicates(char *str) {
     if (str == NULL) {
         return;
