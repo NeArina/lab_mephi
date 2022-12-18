@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include "myreadline.h"
-#include "my_isspace.h"
-#include "mystrlen.h"
+#include "mystr.h"
+
 // my func
 void remove_duplicates(char *str) {
     if (str == NULL) {

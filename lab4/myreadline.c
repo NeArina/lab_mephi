@@ -2,9 +2,9 @@
 // #define BUFFER_SIZE 20
 // #define FORMAT_STR ("%19[^\n]s") // переделать scanf("%80["\n"], buf);
 #include <stdlib.h>
-#include "mystrlen.h"
+#include "mystr.h"
 #include <stdio.h>
-#include <string.h>
+
 
 int myreadline_char(char *p_str, char **ppstr) {
     printf("%s", p_str);
@@ -18,7 +18,7 @@ int myreadline_char(char *p_str, char **ppstr) {
         if (t == EOF) {
             str[j] = 0;
             *ppstr = (char*)malloc(sizeof(char) * mystrlen(str));
-            strcpy(*ppstr, str);
+            mystrcpy(*ppstr, str);
             return EOF;
         } 
 
@@ -29,7 +29,7 @@ int myreadline_char(char *p_str, char **ppstr) {
 
     str[j] = 0;
     *ppstr = (char*)malloc(sizeof(char) * mystrlen(str));
-    strcpy(*ppstr, str);
+    mystrcpy(*ppstr, str);
     return mystrlen(str);
 }
 
@@ -62,7 +62,7 @@ int myreadline(char *p_str, char **ppstr) {
         }
         printf("buffer = \"%s\"", buffer);
         str_ended = buffer[0] == 0;
-        strcpy(str + curSize, buffer);
+        mystrcpy(str + curSize, buffer);
         buffer[0] = 0;
         curSize = mystrlen(str);
         if (curSize + 20 >= size) {
