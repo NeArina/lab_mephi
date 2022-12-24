@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include "input_help.h"
 
-// abcde -> cdeab
 Item *get_end(Item *item, int *len) {
     *len = 1;
     if (!item) {
@@ -97,15 +96,12 @@ void task(const List *list, int n) {
         list_print(list);
     }
 }
-//prev -> NULL
-//next -> ''
 
 int main() {
     int n;
     input_int(&n, 0, 1000, "Input N:");
 
     List *list = list_new();
-
     char c;
 
     while ((c = getchar()) != EOF) {
@@ -120,29 +116,6 @@ int main() {
             list_push_back(list, c);
         }
     }
-
-
-
-
-
-
-    // List *l = list_new();
-    // list_insert(l, 10);
-    // list_print(l);
-    // list_insert(l, 20);
-    // list_print(l);
-    // list_insert(l, 30);
-    // list_print(l);
-    // list_push_back(l, 40);
-    // list_print(l);
-    // list_insert(l, 35);
-    // list_print(l);
-    // list_insert(l, 5);
-    // list_print(l);
-    // list_remove(l, 20);
-    // list_print(l);
-    // list_push_back(l, 45);
-    // list_print(l);
     list_delete(list);
     return 0;
 }

@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-
 #include "list.h"
 
 List *list_new() {
