@@ -54,8 +54,10 @@ int list_push_back(List *list, char data) {
     if (!list->head) {
         list->head = ptr;
         list->tail = ptr;
+        ptr->prev = NULL;
     } else {
         list->tail->next = ptr;
+        ptr->prev = list->tail;
         list->tail = ptr;
     }
     return 0;

@@ -4,6 +4,7 @@
 typedef struct Item {
     char data;
     struct Item *next;
+    struct Item *prev;
 } Item;
 
 typedef struct List {
