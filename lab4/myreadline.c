@@ -60,7 +60,7 @@ int myreadline(char *p_str, char **ppstr) {
             *ppstr = str;
             return EOF;
         }
-        printf("buffer = \"%s\"", buffer);
+        //printf("buffer = \"%s\"", buffer);
         str_ended = buffer[0] == 0;
         mystrcpy(str + curSize, buffer);
         buffer[0] = 0;
@@ -75,6 +75,6 @@ int myreadline(char *p_str, char **ppstr) {
     *ppstr = str;
     char c; /// зацикливание 
     scanf("%c", &c);
-    printf("%c = %d", c, (int)c);
+    //printf("%c = %d", c, (int)c);
     return curSize;
 }

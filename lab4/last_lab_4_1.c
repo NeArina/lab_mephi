@@ -89,7 +89,7 @@ void my_task() {
     int t = 0;
     do {
         t = myreadline_char("input string:", &str);
-        printf("debug t=%d, str=\"%s\"\n", t, str);
+        //printf("debug t=%d, str=\"%s\"\n", t, str);
         if (t >= 0 && str != NULL) {
             printf("before: \"%s\"\n", str);
             strip_string(str);
