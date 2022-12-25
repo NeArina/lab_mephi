@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include "input_help.h"
 
+
+
 Item *get_end(Item *item, int *len) {
     *len = 1;
     if (!item) {
@@ -73,7 +75,7 @@ Item *rotate_n(List *list, Item *start, Item *end, int len, int n) {
     return current;
 }
 
-void task(const List *list, int n) {
+void task( List *list, int n) {
     if (!list) {
         return;
     }
@@ -98,6 +100,8 @@ void task(const List *list, int n) {
 }
 
 int main() {
+  
+
     int n;
     input_int(&n, 0, 1000, "Input N:");
 

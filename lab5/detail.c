@@ -49,3 +49,30 @@ int cmp_detail_count_asc(const void *a, const void *b) {
     return 0;
   }
 }
+ // descending
+ // ascending 
+int cmp_detail_count_des(const void *a, const void *b) {
+  return cmp_detail_count_asc(b, a);
+}
+
+int cmp_detail_name_asc(const void *a, const void *b) {
+  detail *det_a = *(detail **)a;
+  detail *det_b = *(detail **)b;
+
+  return strcmp(det_a->name, det_b->name);
+}
+
+int cmp_detail_name_des(const void *a, const void *b) {
+  return cmp_detail_name_asc(b, a);
+}
+
+int cmp_detail_id_asc(const void *a, const void *b) {
+  detail *det_a = *(detail **)a;
+  detail *det_b = *(detail **)b;
+
+  return strcmp(det_a->id, det_b->id);
+}
+
+int cmp_detail_id_des(const void *a, const void *b) {
+  return cmp_detail_id_asc(b, a);
+}
