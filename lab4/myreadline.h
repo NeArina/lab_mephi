@@ -3,7 +3,9 @@
 
 #include <stddef.h>
 
-int myreadline(char *p_str, char **ppstr);
-int myreadline_char(char *p_str, char **ppstr);
+char *getstr(char *p_str);
+
+// int myreadline(char *p_str, char **ppstr);
+// int myreadline_char(char *p_str, char **ppstr);
 
 #endif

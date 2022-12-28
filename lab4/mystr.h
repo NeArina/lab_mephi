@@ -6,5 +6,6 @@
 size_t mystrlen(const char *s);
 int my_isspace(char c);
 char *mystrcpy(char *dest, const char *src);
+char* mystrcat(char* destination, const char* source);
 
 #endif

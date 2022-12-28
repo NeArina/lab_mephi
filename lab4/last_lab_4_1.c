@@ -20,8 +20,6 @@ void remove_duplicates(char *str) {
     char last_char = str[0];
     int j = 1;
 
-    // str = "  abc   de   "
-
     while (idx < len) {
         if (str[idx] == last_char) {
             while (str[idx] == last_char && idx < len) {
@@ -88,9 +86,9 @@ void my_task() {
     char *str;
     int t = 0;
     do {
-        t = myreadline_char("input string:", &str);
+        str = getstr("input string:");
         //printf("debug t=%d, str=\"%s\"\n", t, str);
-        if (t >= 0 && str != NULL) {
+        if (str != NULL) {
             printf("before: \"%s\"\n", str);
             strip_string(str);
             printf("after:  \"%s\"\n", str);
@@ -100,10 +98,11 @@ void my_task() {
             double elapsed_time = (end - start) / (double)CLOCKS_PER_SEC;
   	    printf("time: %.10lf\n", elapsed_time);
             printf("my task:  \"%s\"\n", str);
+       } else {
+        printf("readline() returned NULL\n");
        }
 	free(str);
-    }
-	 while (t != EOF && str != NULL); // if (str) === if (str != NULL)
+    } while (t != EOF && str != NULL); // if (str) === if (str != NULL)
 }
 
 int main() {

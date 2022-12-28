@@ -2,21 +2,17 @@
 #include <stdio.h>
 #include "input_help.h"
 
-
-
 Item *get_end(Item *item, int *len) {
     *len = 1;
     if (!item) {
         return NULL;
     }
-    
 
     Item *word_start = item;
     while (word_start->next != NULL && word_start->next->data != ' ') {
         word_start = word_start->next;
         (*len)++;
     }
-
     return word_start;
 }
 
@@ -86,28 +82,24 @@ void task( List *list, int n) {
     int first_call = 1;
     while ((word_start = next_word(word_start, first_call))) {
         first_call = 0;
-        printf("start:");
-        items_print(word_start);
+        //printf("start:");
+        //items_print(word_start);
 
         Item *tmp = get_end(word_start, &len);
-        printf("%d end:", len);
+        //printf("%d end:", len);
 
 
-        items_print(tmp);
+        //items_print(tmp);
         word_start = rotate_n(list, word_start, tmp, len, n);
-        list_print(list);
+        //list_print(list);
     }
 }
 
 int main() {
-  
-
     int n;
-    input_int(&n, 0, 1000, "Input N:");
-
     List *list = list_new();
     char c;
-
+    input_int(&n, 0, 1000, "Input N:");
     while ((c = getchar()) != EOF) {
         if (c == '\n') {
             list_print(list);
@@ -116,6 +108,7 @@ int main() {
 
             list_delete(list);
             list = list_new();
+            // input_int(&n, 0, 1000, "Input N:");
         } else {
             list_push_back(list, c);
         }

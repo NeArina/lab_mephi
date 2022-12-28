@@ -54,3 +54,24 @@ void sorted_array(int *arr, int size) {
     k--;
   }
 }
+
+void q_sort(int* arr, int first, int last)
+{
+    int i = first, j = last, x = arr[(first + last) / 2];
+  
+    do {
+        while (arr[i] < x) i++;
+        while (arr[j] > x) j--;
+  
+        if(i <= j) {
+            if (arr[i] > arr[j]) {swap(&arr[i], &arr[j]);}
+            i++;
+            j--;
+        }
+    } while (i <= j);
+  
+    if (i < last)
+        q_sort(arr, i, last);
+    if (first < j)
+        qs(arr, first, j);
+}
