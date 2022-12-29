@@ -1,10 +1,10 @@
 #include "myreadline.h"
 // #define BUFFER_SIZE 20
 // #define FORMAT_STR ("%19[^\n]s") // переделать scanf("%80["\n"], buf);
-#include <stdlib.h>
-#include "mystr.h"
 #include <stdio.h>
+#include <stdlib.h>
 
+#include "mystr.h"
 
 // int myreadline_char(char *p_str, char **ppstr) {
 //     printf("%s", p_str);
@@ -20,7 +20,7 @@
 //             *ppstr = (char*)malloc(sizeof(char) * mystrlen(str));
 //             mystrcpy(*ppstr, str);
 //             return EOF;
-//         } 
+//         }
 
 //         if (c != '\n') {
 //             str[j++] = c;
@@ -63,7 +63,7 @@ int myreadline(char *p_str, char **ppstr) {
         mystrcpy(str + curSize, buffer);
         buffer[0] = 0;
         curSize = mystrlen(str);
-        
+
         if (curSize + 20 >= size) {
             size += 20;
             str = realloc(str, sizeof(char) * size);
@@ -79,33 +79,26 @@ int myreadline(char *p_str, char **ppstr) {
 }
 */
 
-
-
 char *getstr(char *p_str) {
-        char *ptr = (char *)calloc(1, sizeof(char));
-        char buf[81] = {0};
-        int n, len = 0;
-        *ptr = '\0';
-        do {
-                n = scanf("%80[^\n]", buf);
-                if (n < 0){
-                        free(ptr);
-                        ptr = NULL;
-                        break;
-                }
-                if (n == 0){
-                        scanf("%*c");
-                }
-                else{
-                        len += mystrlen(buf);
-                        ptr = (char *)realloc(ptr, len + 1);
-                        ptr = mystrcat(ptr, buf);
-                }
-        }
-        while (n > 0);
-
-        // if (len > 0){
-        //         ptr[len] = '\0';
-        // } 
-        return ptr;
+  char *ptr = (char *)calloc(1, sizeof(char));  // выделяем память под указатель
+  char buf[81] = {0};  // выделяем под 80 + 1 (\0) символов буфер
+  int n, len = 0;  // n = ... , len = ...
+  *ptr = '\0';     // (/)
+  do {
+    n = scanf("%80[^\n]", buf);
+    if (n < 0) {
+      free(ptr);  // освобождаем память, выделенную под указатель
+      ptr = NULL;  // присваиваем указателю ноль
+      break;       // выходим из цикла
+    }
+    if (n == 0) {
+      scanf("%*c");  // считать любое количество символов
+    } else {
+      len += mystrlen(buf);  // прибавить к длине длину буфера
+      ptr = (char *)realloc(ptr, len + 1);  // перевыделить память ...
+      ptr = mystrcat(
+          ptr, buf);  // соединить с места, куда указывает указатель, буфер (?)
+    }
+  } while (n > 0);
+  return ptr;
 }

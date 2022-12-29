@@ -1,24 +1,26 @@
-#include "detail.h"
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "detail.h"
+#include "mysort.h"
 // .csv comma separated values
 // 12345678|Some Name|25
 // 12345678;Some Name;25
 int main() {
-  FILE *fp = fopen("test_data.string", "r");
-    if (fp == NULL) {
-        //oi oi 
-        return 0;
-    }
-
-    char *line = NULL;
-    size_t len = 0;
-    ssize_t read;
-    // читаем строчку за строчкой, strtok()
-    while((read = getline(&line, &len, fp)) != -1) {
-        printf("line len = %zu\n", read);
-        printf("line: %s", line);
-    }
+  //  FILE *fp = fopen("test_data.string", "r");
+  //  if (fp == NULL) {
+  //    // oi oi
+  //    return 0;
+  //  }
+  //
+  //  char *line = NULL;
+  //  size_t len = 0;
+  //  ssize_t read;
+  //  // читаем строчку за строчкой, strtok()
+  //  while ((read = getline(&line, &len, fp)) != -1) {
+  //    // printf("line len = %zu\n", read);
+  //    // printf("line: %s", line);
+  //  }
   // передать сюда
   // из строки целое число - посмотреть, функция
   detail *d1 = create_detail("12345678", "Some Name", 25);
@@ -35,8 +37,12 @@ int main() {
   for (int i = 0; i < arr_size; i++) {
     print_detail(arr[i]);
   }
-
-  qsort(arr, arr_size, sizeof(detail *), cmp_detail_count_asc);
+  // arr + sizeof(detail*) * 30
+  // arr[30]
+  // arr[5] == *(arr + 5) array items
+  // &arr[5] == arr + 5 pointers to array items
+  // qsort(arr, arr_size, sizeof(detail *), cmp_detail_count_asc);
+  myqsort(arr, arr_size, cmp_detail_count_asc);
 
   for (int i = 0; i < arr_size; i++) {
     print_detail(arr[i]);

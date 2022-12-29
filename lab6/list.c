@@ -2,10 +2,13 @@
 #include <stdio.h>
 #include "list.h"
 
+// создание нового листа и выделение памяти с заполнением нулями calloc()
 List *list_new() {
     return (List *) calloc(1, sizeof(List));
 }
 
+
+//удаление листа
 void list_delete(List *list) {
     Item *ptr = list->head, *ptr_prev;
     while (ptr) {
@@ -15,40 +18,52 @@ void list_delete(List *list) {
     }
     free(list);
 }
-
+/// печать элементов
 void items_print(const Item *ptr) {
     printf("\"");
-    while (ptr) {
-        printf("%c", ptr->data);
-        ptr = ptr->next;
+    // пока ptr не 0
+    while (ptr) { 
+        printf("%c", ptr->data); // печать элемента
+        ptr = ptr->next; // передвигаем на следующий
     }
     printf("\"\n");
 }
 
+/// печать листа
 void list_print(const List *list) {
     printf("\"");
+    // указатель на начало листа
     Item *ptr = list->head;
+    // пока указатель не 0
     while (ptr) {
+        // печать значения
         printf("%c", ptr->data);
+        //сдвиг указателя на следующее значение
         ptr = ptr->next;
     }
     printf("\"\n");
 }
 
+// вставка элемента (вставить новый элемент в конец вектора, который увеличивает размер вектора на 1)
 int list_push_back(List *list, char data) {
+    // если tab, заменить на один пробел
     if (data == '\t') {
         data = ' ';
     }
-
+    // если 
     if (data == ' ' && list->tail && list->tail->data == ' ') {
         return 0;
     }
-
+    // выделение памяти для указателя
     Item *ptr = (Item *) malloc(sizeof(Item));
+    
+    // если указатель 
     if (!ptr) {
         return 1;
     }
+    //
     ptr->data = data;
+    // 
     ptr->next = NULL;
     if (!list->head) {
         list->head = ptr;

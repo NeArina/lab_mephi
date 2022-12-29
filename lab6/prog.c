@@ -4,10 +4,11 @@
 
 Item *get_end(Item *item, int *len) {
     *len = 1;
+    // если значения нет, вернём null
     if (!item) {
         return NULL;
     }
-
+    // 
     Item *word_start = item;
     while (word_start->next != NULL && word_start->next->data != ' ') {
         word_start = word_start->next;
@@ -38,13 +39,17 @@ Item *next_word(Item *item, int first_call) {
 }
 
 Item *rotate_n(List *list, Item *start, Item *end, int len, int n) {
+    // расчёт значения, на которое сдвигаем список
     n = n % len; // len 99, n = 100 -> n = 1
-
+    
+    // если n == 0, то сдвига нет
     if (n == 0) {
         return start;
     }
     
+    // присваиваем текущему указателю значение, с которого будет сдвиг
     Item *current = start;
+    // уменьшаем n и пока оно не ноль, идём по списку 
     while (n-- > 0) {
         current = current -> next;
     }

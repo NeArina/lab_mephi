@@ -1,8 +1,6 @@
 #include "input_help.h"
-
 #include <stdio.h>
 #include <stdlib.h>
-
 
 void input_int(int *x, int min_x, int max_x, char *prompt) {
     char *end;
@@ -12,6 +10,8 @@ void input_int(int *x, int min_x, int max_x, char *prompt) {
         char buffer[200];
         printf("%s", prompt);
         t = scanf("%s", buffer);
+        // Функция strtol преобразовывает строку в long int. 
+        // Анализируя строку string, strtol интерпретирует её содержимое в целое число типа long int
         tmp = strtol(buffer, &end, 10);
         if (t == EOF) {
             printf("error read, EOF\n");
