@@ -15,4 +15,6 @@ void print_detail(detail *det);
 
 int cmp_detail_count_asc(const void *a, const void *b);
 
+detail *detail_from_str(const char *str);
+char *detail_to_str(const detail *d);
 #endif

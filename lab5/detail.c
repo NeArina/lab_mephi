@@ -1,4 +1,5 @@
 #include "detail.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -49,8 +50,8 @@ int cmp_detail_count_asc(const void *a, const void *b) {
     return 0;
   }
 }
- // descending
- // ascending 
+// descending
+// ascending
 int cmp_detail_count_des(const void *a, const void *b) {
   return cmp_detail_count_asc(b, a);
 }
@@ -75,4 +76,33 @@ int cmp_detail_id_asc(const void *a, const void *b) {
 
 int cmp_detail_id_des(const void *a, const void *b) {
   return cmp_detail_id_asc(b, a);
+}
+
+detail *detail_from_str(const char *str) {
+  printf("from str: %s\n", str);
+  char *str_copy = (char *)calloc(strlen(str) + 1, sizeof(char));
+  strcpy(str_copy, str);
+
+  /* get the first token */
+  // 'e'
+  // "e"
+  char *id = strtok(str_copy, ";");
+  char *name = strtok(NULL, ";");
+  char *count = strtok(NULL, ";");
+
+  int c = atoi(count);
+
+  printf("%s %s %d\n", id, name, c);
+
+  detail *new_det = create_detail(id, name, c);
+  print_detail(new_det);
+
+  free(str_copy);
+  return new_det;
+}
+char *detail_to_str(const detail *d) {
+  char *s = calloc(8 + strlen(d->name) + 20 + 2 + 2,
+                   sizeof(char));  // count len + ; * 2 + \n + '\0'
+  sprintf(s, "%s;%s;%d\n", d->id, d->name, d->count);
+  return s;
 }
