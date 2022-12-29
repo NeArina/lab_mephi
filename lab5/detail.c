@@ -110,7 +110,7 @@ char *detail_to_str(const detail *d) {
 detail *rand_detail() {
   char id[9];
   for (int i = 0; i < 8; i++) {
-    id[i] = 'a' + rand() % 26;
+    id[i] = '0' + rand() % 10;
   }
   id[8] = 0;
 
@@ -124,4 +124,13 @@ detail *rand_detail() {
   int count = 10 + rand() % 500;
 
   return create_detail(id, name, count);
+}
+
+detail **rand_detail_array(int n) {
+  detail **arr = calloc(n, sizeof(detail *));
+  for (int i = 0; i < n; i++) {
+    arr[i] = rand_detail();
+  }
+
+  return arr;
 }

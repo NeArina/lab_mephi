@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
 
 #include "detail.h"
@@ -108,6 +109,15 @@ void read_options(int argc, char **argv, enum SortId *sort_id,
 }
 
 int main(int argc, char **argv) {
+  srand(time(0));
+
+  // detail **array = rand_detail_array(5);
+
+  // for (int i = 0; i < 5; i++) {
+  //   print_detail(array[i]);
+  //   free_detail(array[i]);
+  // }
+
   enum SortId sort_id = SORT_ID_UNDEFINED;
   enum SortDirection sort_dir = SORT_DIRECTION_UNDEFINED;
   enum SortMember sort_memb = SORT_MEMBER_UNDEFINED;
