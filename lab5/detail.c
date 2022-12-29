@@ -106,3 +106,22 @@ char *detail_to_str(const detail *d) {
   sprintf(s, "%s;%s;%d\n", d->id, d->name, d->count);
   return s;
 }
+
+detail *rand_detail() {
+  char id[9];
+  for (int i = 0; i < 8; i++) {
+    id[i] = 'a' + rand() % 26;
+  }
+  id[8] = 0;
+
+  int len = rand() % 50 + 5;
+  char *name = calloc(len + 1, sizeof(char));
+  for (int i = 0; i < len; i++) {
+    name[i] = 'a' + rand() % 26;
+  }
+  name[len] = 0;
+
+  int count = 10 + rand() % 500;
+
+  return create_detail(id, name, count);
+}
