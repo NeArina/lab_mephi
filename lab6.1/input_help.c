@@ -13,7 +13,7 @@ void input_int(int *x, int min_x, int max_x, char *prompt) {
     t = scanf("%s", buffer);
     tmp = strtol(buffer, &end, 10);
     if (t == EOF) {
-      printf("error read, EOF\n");
+      printf("EOF\n");
     } else if (t == 0) {
       printf("input not a string O_o\n");
       scanf("%*[^\n]");

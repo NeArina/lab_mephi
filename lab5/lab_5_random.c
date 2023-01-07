@@ -36,11 +36,10 @@ enum SortMember {
 // 12345678;Some Name;25
 // -o output.tx -i input.txt
 void read_options(int argc, char **argv, enum SortId *sort_id,
-                  enum SortDirection *sort_dir, enum SortMember *sort_memb,
-                  char *input, char *output) {
+                  enum SortDirection *sort_dir, enum SortMember *sort_memb) {
   int rez = 0;
   //	opterr = 0;
-  while ((rez = getopt(argc, argv, "s:m:d:i:o:")) !=
+  while ((rez = getopt(argc, argv, "s:m:d:")) !=
          -1) {  // sort, member, direction, input, output
     switch (rez) {
       case 's':
@@ -68,7 +67,7 @@ void read_options(int argc, char **argv, enum SortId *sort_id,
           // TODO
           printf(
               "error reading argument -s value; possible values are: "
-              "name, count\n");
+              "std_quick, custom_quick, custom_insert\n");
         }
         // printf("-m = %d\n", *sort_memb);
         break;
@@ -81,25 +80,9 @@ void read_options(int argc, char **argv, enum SortId *sort_id,
           // TODO
           printf(
               "error reading argument -s value; possible values are: "
-              "asc, des\n");
+              "std_quick, custom_quick, custom_insert\n");
         }
         // printf("-d = %d\n", *sort_dir);
-        break;
-      case 'i':
-        if (optarg) {
-          strncat(input, optarg, 80);
-        } else {
-          printf("error reading argument -i value");
-        }
-        // printf("input = \"%s\"\n", optarg);
-        break;
-      case 'o':
-        if (optarg) {
-          strncat(output, optarg, 80);
-        } else {
-          printf("error reading argument -o value");
-        }
-        // printf("output = \"%s\"\n", optarg);
         break;
       case '?':
         printf("Error found ! \n");
@@ -149,49 +132,33 @@ void *choose_sort_function(enum SortId sort_id, enum SortDirection sort_dir,
   return NULL;
 }
 
-int my_sort_task(int argc, char **argv) {
-  enum SortId sort_id = SORT_ID_UNDEFINED;
-  enum SortDirection sort_dir = SORT_DIRECTION_UNDEFINED;
-  enum SortMember sort_memb = SORT_MEMBER_UNDEFINED;
+double task_once(enum SortId sort_id, enum SortDirection sort_dir,
+                 enum SortMember sort_memb, int arr_size) {
+  int size = arr_size;
+  detail **arr = rand_detail_array(arr_size);
 
-  char input[81] = {0};
-  char output[81] = {0};
-
-  read_options(argc, argv, &sort_id, &sort_dir, &sort_memb, input, output);
-
-  if (sort_dir == SORT_DIRECTION_UNDEFINED || sort_id == SORT_ID_UNDEFINED ||
-      sort_memb == SORT_MEMBER_UNDEFINED || strlen(input) == 0 ||
-      strlen(output) == 0) {
-    printf(
-        "program arguments are incorrect\n\
-        usage: -s <sort_id> -m <sort_member> -d <sort_direction> -i <input_file> -o <output_file>\n\
-        where\n\
-        <sort_id> is one of std_quick, custom_quick, custom_insert\n\
-        <sort_member> is one of id, name, count\n\
-        <sort_direction> is asc or des\n");
-    return 1;
-  }
-
-  int size = 0;
-  detail **arr = read_details_from_file(&size, input);
-
-  printf("s = %d, d = %d, m = %d\n", sort_id, sort_dir, sort_memb);
+  // printf("%p %d", arr, size);
+  // printf("s = %d, d = %d, m = %d\n", sort_id, sort_dir, sort_memb);
   // print_detail_array(arr, size);
 
   int (*cmp)(const void *a, const void *b) =
       choose_sort_function(sort_id, sort_dir, sort_memb);
 
+  clock_t begin = clock();
+  clock_t end;
+  double time_spent = 0;
+
   switch (sort_id) {
     case SORT_ID_STD_QUICK:
-      printf("using std qsort\n");
+      // printf("using std qsort\n");
       qsort(arr, size, sizeof(detail *), cmp);
       break;
     case SORT_ID_CUSTOM_QUICK:
-      printf("using custom qsort\n");
+      // printf("using custom qsort\n");
       myqsort(arr, size, cmp);
       break;
     case SORT_ID_CUSTOM_INSERT:
-      printf("using custom insert sort\n");
+      // printf("using custom insert sort\n");
       sort_insert(arr, size, cmp);
       break;
 
@@ -201,15 +168,67 @@ int my_sort_task(int argc, char **argv) {
       break;
   }
 
-  write_to_file(arr, size, output);
+  end = clock();
+  time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 
   // print_detail_array(arr, size);
+  // printf("size = %d,time = %.7lf\n", arr_size, time_spent);
 
   free_detail_array(arr, size);
-  return 0;
+  return time_spent;
+}
+
+double my_sort_task(enum SortId sort_id, enum SortDirection sort_dir,
+                    enum SortMember sort_memb, int arr_num, int arr_size) {
+  srand(time(0));
+
+  double time_sum = 0;
+  int arr_num_copy = arr_num;
+  while (arr_num_copy-- > 0) {
+    time_sum += task_once(sort_id, sort_dir, sort_memb, arr_size);
+  }
+  double avg = time_sum / arr_num;
+  // printf("AAA %.7lf %d average execution time is %.7lf\n", time_sum, arr_num,
+  //        avg);
+
+  return avg;
 }
 
 int main(int argc, char **argv) {
-  my_sort_task(argc, argv);
+  enum SortId sort_id = SORT_ID_UNDEFINED;
+  enum SortDirection sort_dir = SORT_DIRECTION_UNDEFINED;
+  enum SortMember sort_memb = SORT_MEMBER_UNDEFINED;
+
+  read_options(argc, argv, &sort_id, &sort_dir, &sort_memb);
+
+  if (sort_dir == SORT_DIRECTION_UNDEFINED || sort_id == SORT_ID_UNDEFINED ||
+      sort_memb == SORT_MEMBER_UNDEFINED) {
+    printf(
+        "program arguments are incorrect\n\
+        usage: -s <sort_id> -m <sort_member> -d <sort_direction> -i <input_file> -o <output_file>\n\
+        where\n\
+        <sort_id> is one of std_quick, custom_quick, custom_insert\n\
+        <sort_member> is one of id, name, count\n\
+        <sort_direction> is asc or des\n");
+    return 1;
+  }
+  int n = 100;
+  double time = 0;
+
+  double prev_time = -1;
+
+  FILE *out = fopen("sort_time.txt", "w");
+
+  while (n < 1e7) {
+    time = my_sort_task(sort_id, sort_dir, sort_memb, 5, n);
+    if (prev_time > 0) {
+      // printf("ratio to prev: %.10lf\n", time / prev_time);
+    }
+    prev_time = time;
+    printf("len = %d, average execution time is %.7lf\n", n, time);
+    fprintf(out, "%d %.10lf\n", n, time);
+    n *= 10;
+  }
+  fclose(out);
   return 0;
 }

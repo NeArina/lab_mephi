@@ -41,7 +41,11 @@ int list_push_back(List *list, char data) {
 
   Item *ptr = list->head;
 
+  if (ptr == NULL && data == ' ') {  // !list->head
+    return 0;
+  }
   Item *new_item = (Item *)malloc(sizeof(Item));
+
   if (!new_item) {
     return 1;
   }
@@ -62,4 +66,15 @@ int list_push_back(List *list, char data) {
   }
 
   return 0;
+}
+
+void remove_last_space(List *list) {
+  Item *ptr = list->head;
+  while (ptr && ptr->next && ptr->next->next != NULL) {
+    ptr = ptr->next;
+  }
+  if (ptr && ptr->next && ptr->next->data == ' ') {
+    free(ptr->next);
+    ptr->next = NULL;
+  }
 }

@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 int main() {
+  srand(time(0));
+
   int count = 0;
   printf("Input number:");
   scanf("%d", &count);

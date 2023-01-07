@@ -82,8 +82,8 @@ int myreadline(char *p_str, char **ppstr) {
 char *getstr(char *p_str) {
   char *ptr = (char *)calloc(1, sizeof(char));  // выделяем память под указатель
   char buf[81] = {0};  // выделяем под 80 + 1 (\0) символов буфер
-  int n, len = 0;  // n = ... , len = ...
-  *ptr = '\0';     // (/)
+  int n, len = 0;
+  *ptr = '\0';  // (/)
   do {
     n = scanf("%80[^\n]", buf);
     if (n < 0) {
@@ -95,7 +95,7 @@ char *getstr(char *p_str) {
       scanf("%*c");  // считать любое количество символов
     } else {
       len += mystrlen(buf);  // прибавить к длине длину буфера
-      ptr = (char *)realloc(ptr, len + 1);  // перевыделить память ...
+      ptr = (char *)realloc(ptr, len + 1);  // перевыделить память
       ptr = mystrcat(
           ptr, buf);  // соединить с места, куда указывает указатель, буфер (?)
     }

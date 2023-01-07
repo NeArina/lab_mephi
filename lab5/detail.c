@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "myreadline.h"
+
 detail *create_detail(const char *id, const char *name, int count) {
   detail *result = (detail *)malloc(sizeof(detail));
 
@@ -39,6 +41,7 @@ void print_detail(detail *det) {
 // first argument is greater than the second and zero if the arguments are
 // equivalent.
 int cmp_detail_count_asc(const void *a, const void *b) {
+  // printf("using cmp_detail_count_asc\n");
   detail *det_a = *(detail **)a;
   detail *det_b = *(detail **)b;
 
@@ -53,10 +56,12 @@ int cmp_detail_count_asc(const void *a, const void *b) {
 // descending
 // ascending
 int cmp_detail_count_des(const void *a, const void *b) {
+  // printf("using cmp_detail_count_des\n");
   return cmp_detail_count_asc(b, a);
 }
 
 int cmp_detail_name_asc(const void *a, const void *b) {
+  // printf("using cmp_detail_name_asc\n");
   detail *det_a = *(detail **)a;
   detail *det_b = *(detail **)b;
 
@@ -64,10 +69,12 @@ int cmp_detail_name_asc(const void *a, const void *b) {
 }
 
 int cmp_detail_name_des(const void *a, const void *b) {
+  // printf("using cmp_detail_name_des\n");
   return cmp_detail_name_asc(b, a);
 }
 
 int cmp_detail_id_asc(const void *a, const void *b) {
+  // printf("using cmp_detail_id_asc\n");
   detail *det_a = *(detail **)a;
   detail *det_b = *(detail **)b;
 
@@ -75,11 +82,12 @@ int cmp_detail_id_asc(const void *a, const void *b) {
 }
 
 int cmp_detail_id_des(const void *a, const void *b) {
+  // printf("using cmp_detail_id_des\n");
   return cmp_detail_id_asc(b, a);
 }
 
 detail *detail_from_str(const char *str) {
-  printf("from str: %s\n", str);
+  // printf("from str: %s\n", str);
   char *str_copy = (char *)calloc(strlen(str) + 1, sizeof(char));
   strcpy(str_copy, str);
 
@@ -92,10 +100,10 @@ detail *detail_from_str(const char *str) {
 
   int c = atoi(count);
 
-  printf("%s %s %d\n", id, name, c);
+  // printf("%s %s %d\n", id, name, c);
 
   detail *new_det = create_detail(id, name, c);
-  print_detail(new_det);
+  // print_detail(new_det);
 
   free(str_copy);
   return new_det;
@@ -133,4 +141,85 @@ detail **rand_detail_array(int n) {
   }
 
   return arr;
+}
+
+void free_detail_array(detail **arr, int size) {
+  if (arr == NULL || size <= 0) {
+    return;
+  }
+
+  for (int i = 0; i < size; i++) {
+    free_detail(arr[i]);
+  }
+
+  free(arr);
+}
+
+void print_detail_array(detail **arr, int size) {
+  if (arr == NULL || size <= 0) {
+    return;
+  }
+
+  for (int i = 0; i < size; i++) {
+    print_detail(arr[i]);
+  }
+}
+
+detail **read_details_from_file(int *size, const char *filename) {
+  FILE *fp = fopen(filename, "r");
+  if (fp == NULL) {
+    // oi oi
+    printf("error opening input\n");
+    return NULL;
+  }
+
+  char *line = NULL;
+  size_t len = 0;
+  ssize_t read;
+
+  detail **arr = calloc(1, sizeof(detail *));
+
+  if (arr == NULL) {
+    // oi oi
+    printf("error calloc in read_details_from_file\n");
+    return NULL;
+  }
+
+  int arr_capacity = 1;
+  int arr_count = 0;
+  // читаем строчку за строчкой, strtok()
+
+  while (!feof(fp)) {
+    line = getstr(fp);
+    // printf("getline: %s\n", line);
+    detail *d = detail_from_str(line);
+    if (arr_count + 1 > arr_capacity) {
+      arr_capacity *= 2;
+      arr = realloc(arr, arr_capacity * sizeof(detail *));
+    }
+    arr[arr_count++] = d;
+  }
+  free(line);
+  fclose(fp);
+
+  arr = realloc(arr, arr_count * sizeof(detail *));  // fit to the real size
+
+  *size = arr_count;
+  return arr;
+}
+
+int write_to_file(detail **arr, int size, const char *filename) {
+  FILE *fp = fopen(filename, "w");
+  if (fp == NULL) {
+    // oi oi
+    printf("error opening output\n");
+    return 1;  // NOT OK
+  }
+
+  for (int i = 0; i < size; i++) {
+    fprintf(fp, "%s", detail_to_str(arr[i]));
+  }
+
+  fclose(fp);
+  return 0;  // OK
 }

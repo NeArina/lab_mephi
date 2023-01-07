@@ -46,11 +46,11 @@ void mytask(List *list, int n) {
     return;
   }
 
-  // if first char is a space
-  if (start->data == ' ') {
-    pre = start;
-    start = start->next;
-  }
+  // // if first char is a space
+  // if (start->data == ' ') {
+  //   pre = start;
+  //   start = start->next;
+  // }
 
   end = start;
   while (end->next && end->next->data != ' ') {
@@ -79,12 +79,13 @@ int main() {
   input_int(&n, 0, 1000, "Input N:");
   while ((c = getchar()) != EOF) {
     if (c == '\n') {
+      remove_last_space(list);
       list_print(list);
       mytask(list, n);
       list_print(list);
       list_delete(list);
       list = list_new();
-      // input_int(&n, 0, 1000, "Input N:");
+      input_int(&n, 0, 1000, "Input N:");
     } else {
       list_push_back(list, c);
     }
