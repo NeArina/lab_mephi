@@ -6,107 +6,16 @@
 
 #include "detail.h"
 #include "mysort.h"
+#include "read_options.h"
+
 // .csv comma separated values
 // 12345678|Some Name|25
 // 12345678;Some Name;25
-
-extern char *optarg;
-extern int optind, opterr, optopt;
-
-enum SortId {
-  SORT_ID_UNDEFINED = 0,
-  SORT_ID_STD_QUICK,
-  SORT_ID_CUSTOM_QUICK,
-  SORT_ID_CUSTOM_INSERT
-};
-enum SortDirection {
-  SORT_DIRECTION_UNDEFINED = 0,
-  SORT_DIRECTION_ASC,
-  SORT_DIRECTION_DES
-};
-enum SortMember {
-  SORT_MEMBER_UNDEFINED = 0,
-  SORT_MEMBER_ID,
-  SORT_MEMBER_NAME,
-  SORT_MEMBER_COUNT
-};
 
 // .csv comma separated values
 // 12345678|Some Name|25
 // 12345678;Some Name;25
 // -o output.tx -i input.txt
-void read_options(int argc, char **argv, enum SortId *sort_id,
-                  enum SortDirection *sort_dir, enum SortMember *sort_memb,
-                  char *input, char *output) {
-  int rez = 0;
-  //	opterr = 0;
-  while ((rez = getopt(argc, argv, "s:m:d:i:o:")) !=
-         -1) {  // sort, member, direction, input, output
-    switch (rez) {
-      case 's':
-        if (strcmp("std_quick", optarg) == 0) {
-          *sort_id = SORT_ID_STD_QUICK;
-        } else if (strcmp("custom_quick", optarg) == 0) {
-          *sort_id = SORT_ID_CUSTOM_QUICK;
-        } else if (strcmp("custom_insert", optarg) == 0) {
-          *sort_id = SORT_ID_CUSTOM_INSERT;
-        } else {
-          printf(
-              "error reading argument -s value; possible values are: "
-              "std_quick, custom_quick, custom_insert\n");
-        }
-        // printf("-s = %d\n", *sort_id);
-        break;
-      case 'm':
-        if (strcmp("id", optarg) == 0) {
-          *sort_memb = SORT_MEMBER_ID;
-        } else if (strcmp("name", optarg) == 0) {
-          *sort_memb = SORT_MEMBER_NAME;
-        } else if (strcmp("count", optarg) == 0) {
-          *sort_memb = SORT_MEMBER_COUNT;
-        } else {
-          // TODO
-          printf(
-              "error reading argument -s value; possible values are: "
-              "name, count\n");
-        }
-        // printf("-m = %d\n", *sort_memb);
-        break;
-      case 'd':
-        if (strcmp("asc", optarg) == 0) {
-          *sort_dir = SORT_DIRECTION_ASC;
-        } else if (strcmp("des", optarg) == 0) {
-          *sort_dir = SORT_DIRECTION_DES;
-        } else {
-          // TODO
-          printf(
-              "error reading argument -s value; possible values are: "
-              "asc, des\n");
-        }
-        // printf("-d = %d\n", *sort_dir);
-        break;
-      case 'i':
-        if (optarg) {
-          strncat(input, optarg, 80);
-        } else {
-          printf("error reading argument -i value");
-        }
-        // printf("input = \"%s\"\n", optarg);
-        break;
-      case 'o':
-        if (optarg) {
-          strncat(output, optarg, 80);
-        } else {
-          printf("error reading argument -o value");
-        }
-        // printf("output = \"%s\"\n", optarg);
-        break;
-      case '?':
-        printf("Error found ! \n");
-        break;
-    }  // switch
-  }    // while
-}
 
 void *choose_sort_function(enum SortId sort_id, enum SortDirection sort_dir,
                            enum SortMember sort_memb) {
@@ -154,26 +63,39 @@ int my_sort_task(int argc, char **argv) {
   enum SortDirection sort_dir = SORT_DIRECTION_UNDEFINED;
   enum SortMember sort_memb = SORT_MEMBER_UNDEFINED;
 
-  char input[81] = {0};
-  char output[81] = {0};
+  read_options(argc, argv, &sort_id, &sort_dir, &sort_memb);
 
-  read_options(argc, argv, &sort_id, &sort_dir, &sort_memb, input, output);
+  char *input = NULL;
+  char *output = NULL;
+  if (optind + 1 < argc) {
+    input = argv[optind];
+    output = argv[optind + 1];
+  }
+
+  // лишние позиционные аргументы
+  if (optind + 2 < argc) {
+    fprintf(stderr, "Unexpected argument %s\n", argv[optind + 2]);
+  }
 
   if (sort_dir == SORT_DIRECTION_UNDEFINED || sort_id == SORT_ID_UNDEFINED ||
-      sort_memb == SORT_MEMBER_UNDEFINED || strlen(input) == 0 ||
-      strlen(output) == 0) {
+      sort_memb == SORT_MEMBER_UNDEFINED || input == NULL || output == NULL ||
+      strlen(input) == 0 || strlen(output) == 0) {
     printf(
         "program arguments are incorrect\n\
-        usage: -s <sort_id> -m <sort_member> -d <sort_direction> -i <input_file> -o <output_file>\n\
+        usage: -s <sort_id> -m <sort_member> <sort_direction> <input_file> <output_file>\n\
         where\n\
         <sort_id> is one of std_quick, custom_quick, custom_insert\n\
         <sort_member> is one of id, name, count\n\
-        <sort_direction> is asc or des\n");
+        <sort_direction> is -a or -d\n");
     return 1;
   }
 
   int size = 0;
   detail **arr = read_details_from_file(&size, input);
+  if (arr == NULL) {
+    printf("%s", "failed to open input file\n");
+    return 0;
+  }
 
   printf("s = %d, d = %d, m = %d\n", sort_id, sort_dir, sort_memb);
   // print_detail_array(arr, size);

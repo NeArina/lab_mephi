@@ -60,7 +60,7 @@ void sort_insert(detail **arr, int size,
 
 void q_sort(detail **arr, int first, int last,
             int (*cmp)(const void *, const void *)) {
-  printf("abc\n");
+  // printf("abc\n");
   int f = first;
   int l = last;
   detail *x = arr[(first + last) / 2];
@@ -72,8 +72,8 @@ void q_sort(detail **arr, int first, int last,
     while (cmp(&arr[l], &x) > 0) {
       l--;
     }
-    if (l <= f) {
-      if (cmp(&arr[f], &arr[l])) {
+    if (f <= l) {
+      if (cmp(&arr[f], &arr[l]) > 0) {
         void *tmp = arr[f];
         arr[f] = arr[l];
         arr[l] = tmp;

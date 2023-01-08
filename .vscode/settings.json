@@ -1,6 +1,7 @@
 {
     "files.associations": {
-        "myreadline.h": "c"
+        "myreadline.h": "c",
+        "mystr.h": "c"
     },
     "editor.formatOnSave": true,
     "C_Cpp.clang_format_fallbackStyle": "Google"

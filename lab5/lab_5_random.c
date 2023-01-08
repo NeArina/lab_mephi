@@ -218,17 +218,18 @@ int main(int argc, char **argv) {
   double prev_time = -1;
 
   FILE *out = fopen("sort_time.txt", "w");
-
-  while (n < 1e7) {
-    time = my_sort_task(sort_id, sort_dir, sort_memb, 5, n);
+  // fprintf(out, "[");
+  while (n < 10000) {
+    time = my_sort_task(sort_id, sort_dir, sort_memb, 8, n);
     if (prev_time > 0) {
       // printf("ratio to prev: %.10lf\n", time / prev_time);
     }
     prev_time = time;
-    printf("len = %d, average execution time is %.7lf\n", n, time);
-    fprintf(out, "%d %.10lf\n", n, time);
-    n *= 10;
+    // printf("(%d, %.7lf), ", n, time);
+    fprintf(out, "%d\t%.10lf\n", n, time);
+    n += 100;
   }
+  // fprintf(out, "]");
   fclose(out);
   return 0;
 }

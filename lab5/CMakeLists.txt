@@ -3,4 +3,4 @@ project(lab5 C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(lab5 detail.c mysort.c lab_5.c)
+add_executable(lab5 detail.c mysort.c lab_5.c myreadline.c)
