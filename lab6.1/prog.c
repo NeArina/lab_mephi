@@ -74,9 +74,15 @@ void mytask(List *list, int n) {
 
 int main() {
   int n;
+
+  int res = input_int(&n, 0, 1000, "Input N:");
+  if (res == EOF) {
+    return 0;
+  }
+
   List *list = list_new();
   char c;
-  input_int(&n, 0, 1000, "Input N:");
+
   while ((c = getchar()) != EOF) {
     if (c == '\n') {
       remove_last_space(list);
@@ -85,7 +91,10 @@ int main() {
       list_print(list);
       list_delete(list);
       list = list_new();
-      input_int(&n, 0, 1000, "Input N:");
+      res = input_int(&n, 0, 1000, "Input N:");
+      if (res == EOF) {
+        break;
+      }
     } else {
       list_push_back(list, c);
     }
