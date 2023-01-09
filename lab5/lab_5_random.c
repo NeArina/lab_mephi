@@ -6,6 +6,8 @@
 
 #include "detail.h"
 #include "mysort.h"
+#include "read_options.h"
+
 // .csv comma separated values
 // 12345678|Some Name|25
 // 12345678;Some Name;25
@@ -13,83 +15,10 @@
 extern char *optarg;
 extern int optind, opterr, optopt;
 
-enum SortId {
-  SORT_ID_UNDEFINED = 0,
-  SORT_ID_STD_QUICK,
-  SORT_ID_CUSTOM_QUICK,
-  SORT_ID_CUSTOM_INSERT
-};
-enum SortDirection {
-  SORT_DIRECTION_UNDEFINED = 0,
-  SORT_DIRECTION_ASC,
-  SORT_DIRECTION_DES
-};
-enum SortMember {
-  SORT_MEMBER_UNDEFINED = 0,
-  SORT_MEMBER_ID,
-  SORT_MEMBER_NAME,
-  SORT_MEMBER_COUNT
-};
-
 // .csv comma separated values
 // 12345678|Some Name|25
 // 12345678;Some Name;25
 // -o output.tx -i input.txt
-void read_options(int argc, char **argv, enum SortId *sort_id,
-                  enum SortDirection *sort_dir, enum SortMember *sort_memb) {
-  int rez = 0;
-  //	opterr = 0;
-  while ((rez = getopt(argc, argv, "s:m:d:")) !=
-         -1) {  // sort, member, direction, input, output
-    switch (rez) {
-      case 's':
-        if (strcmp("std_quick", optarg) == 0) {
-          *sort_id = SORT_ID_STD_QUICK;
-        } else if (strcmp("custom_quick", optarg) == 0) {
-          *sort_id = SORT_ID_CUSTOM_QUICK;
-        } else if (strcmp("custom_insert", optarg) == 0) {
-          *sort_id = SORT_ID_CUSTOM_INSERT;
-        } else {
-          printf(
-              "error reading argument -s value; possible values are: "
-              "std_quick, custom_quick, custom_insert\n");
-        }
-        // printf("-s = %d\n", *sort_id);
-        break;
-      case 'm':
-        if (strcmp("id", optarg) == 0) {
-          *sort_memb = SORT_MEMBER_ID;
-        } else if (strcmp("name", optarg) == 0) {
-          *sort_memb = SORT_MEMBER_NAME;
-        } else if (strcmp("count", optarg) == 0) {
-          *sort_memb = SORT_MEMBER_COUNT;
-        } else {
-          // TODO
-          printf(
-              "error reading argument -s value; possible values are: "
-              "std_quick, custom_quick, custom_insert\n");
-        }
-        // printf("-m = %d\n", *sort_memb);
-        break;
-      case 'd':
-        if (strcmp("asc", optarg) == 0) {
-          *sort_dir = SORT_DIRECTION_ASC;
-        } else if (strcmp("des", optarg) == 0) {
-          *sort_dir = SORT_DIRECTION_DES;
-        } else {
-          // TODO
-          printf(
-              "error reading argument -s value; possible values are: "
-              "std_quick, custom_quick, custom_insert\n");
-        }
-        // printf("-d = %d\n", *sort_dir);
-        break;
-      case '?':
-        printf("Error found ! \n");
-        break;
-    }  // switch
-  }    // while
-}
 
 void *choose_sort_function(enum SortId sort_id, enum SortDirection sort_dir,
                            enum SortMember sort_memb) {
@@ -201,35 +130,42 @@ int main(int argc, char **argv) {
 
   read_options(argc, argv, &sort_id, &sort_dir, &sort_memb);
 
+  char *array_count_s = NULL;
+  char *array_len_s = NULL;
+  if (optind + 1 < argc) {
+    array_count_s = argv[optind];
+    array_len_s = argv[optind + 1];
+  }
+
+  int arr_count = atoi(array_count_s);
+  int arr_len = atoi(array_len_s);
+
+  // лишние позиционные аргументы
+  if (optind + 2 < argc) {
+    fprintf(stderr, "Unexpected argument %s\n", argv[optind + 2]);
+  }
+
   if (sort_dir == SORT_DIRECTION_UNDEFINED || sort_id == SORT_ID_UNDEFINED ||
-      sort_memb == SORT_MEMBER_UNDEFINED) {
+      sort_memb == SORT_MEMBER_UNDEFINED || arr_count <= 0 || arr_len <= 0) {
     printf(
         "program arguments are incorrect\n\
-        usage: -s <sort_id> -m <sort_member> -d <sort_direction> -i <input_file> -o <output_file>\n\
+        usage: -s <sort_id> -m <sort_member> <sort_direction> <arrays_count> <array_len>\n\
         where\n\
         <sort_id> is one of std_quick, custom_quick, custom_insert\n\
         <sort_member> is one of id, name, count\n\
-        <sort_direction> is asc or des\n");
+        <sort_direction> is -a or -d\n");
     return 1;
   }
-  int n = 100;
-  double time = 0;
 
-  double prev_time = -1;
+  char filename[80];
+  sprintf(filename, "sort_time_sort_%d_member_%d_direction_%d.txt", sort_id,
+          sort_memb, sort_dir);
+  FILE *out = fopen(filename, "a");
 
-  FILE *out = fopen("sort_time.txt", "w");
-  // fprintf(out, "[");
-  while (n < 10000) {
-    time = my_sort_task(sort_id, sort_dir, sort_memb, 8, n);
-    if (prev_time > 0) {
-      // printf("ratio to prev: %.10lf\n", time / prev_time);
-    }
-    prev_time = time;
-    // printf("(%d, %.7lf), ", n, time);
-    fprintf(out, "%d\t%.10lf\n", n, time);
-    n += 100;
-  }
-  // fprintf(out, "]");
+  double time = my_sort_task(sort_id, sort_dir, sort_memb, arr_count, arr_len);
+
+  fprintf(out, "%d\t%.10lf\n", arr_len, time);
+
   fclose(out);
   return 0;
 }
