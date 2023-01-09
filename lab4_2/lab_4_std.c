@@ -1,6 +1,6 @@
 #include <ctype.h>
-#include <stdio.h>
 #include <readline/readline.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -11,7 +11,7 @@ char *remove_duplicates(char *str) {
     return NULL;
   }
 
-  int len = strlen(str); // len
+  int len = strlen(str);  // len
   if (len == 0) {
     result[0] = 0;
     return result;
@@ -47,9 +47,9 @@ char *strip_string_tok(char *str) {
   int j = 0;
 
   char *token;
-  
+
   token = strtok(str_copy, " \t\n");
-  
+
   if (token) {
     strcpy(result + j, token);
     j += strlen(token);
@@ -66,8 +66,8 @@ char *strip_string_tok(char *str) {
       result[j++] = ' ';
     }
   }
-  if (j > 0 && result[j-1] == ' ') {
-    result[j-1] = 0;
+  if (j > 0 && result[j - 1] == ' ') {
+    result[j - 1] = 0;
   }
   free(str_copy);
   return result;
@@ -82,9 +82,9 @@ void my_task() {
     if (str != NULL) {
       printf("before: \"%s\"\n", str);
       // s1 = strip_string(str);
+      clock_t start = clock();
       s1 = strip_string_tok(str);
       printf("after:  \"%s\"\n", s1);
-      clock_t start = clock();
       s2 = remove_duplicates(s1);
       clock_t end = clock();
       double elapsed_time = (end - start) / (double)CLOCKS_PER_SEC;

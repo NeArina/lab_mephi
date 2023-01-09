@@ -30,17 +30,17 @@ char *mystrcat(char *dest, const char *s) {
   return dest;
 }
 
-char *mystrchr(const char *string, const char ch) {
-  while (*string && *string != ch) {
-    ++string;
+char *mystrchr(const char *s, const char ch) {
+  while (*s && *s != ch) {
+    ++s;
   }
-  return (*string) ? (char *)string : NULL;
+  return (*s) ? (char *)s : NULL;
 }
 
-char *mystrtok(char *str, const char *delim) {
+char *mystrtok(char *s, const char *delim) {
   static char *next;
-  if (str) {
-    next = str;
+  if (s) {
+    next = s;
     while (*next && mystrchr(delim, *next)) {
       *next++ = 0;
     }  // now next points to the first non-delimiter char (or '\0')
@@ -49,12 +49,12 @@ char *mystrtok(char *str, const char *delim) {
     return NULL;
   }
   //    abc\0\0\0\01234\0
-  str = next;
+  s = next;
   while (*next && !mystrchr(delim, *next)) {
     next++;
   }
   while (*next && mystrchr(delim, *next)) {
     *next++ = 0;
   }
-  return str;
+  return s;
 }
