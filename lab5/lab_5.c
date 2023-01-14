@@ -84,7 +84,7 @@ int my_sort_task(int argc, char **argv) {
         "program arguments are incorrect\n\
         usage: -s <sort_id> -m <sort_member> <sort_direction> <input_file> <output_file>\n\
         where\n\
-        <sort_id> is one of std_quick, custom_quick, custom_insert\n\
+        <sort_id> is one of std_quick, custom_quick, custom_selection\n\
         <sort_member> is one of id, name, count\n\
         <sort_direction> is -a or -d\n");
     return 1;
@@ -112,9 +112,9 @@ int my_sort_task(int argc, char **argv) {
       printf("using custom qsort\n");
       myqsort(arr, size, cmp);
       break;
-    case SORT_ID_CUSTOM_INSERT:
-      printf("using custom insert sort\n");
-      sort_insert(arr, size, cmp);
+    case SORT_ID_CUSTOM_SELECTION:
+      printf("using custom selection sort\n");
+      sort_selection(arr, size, cmp);
       break;
 
     default:

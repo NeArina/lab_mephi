@@ -28,8 +28,8 @@ void nums(detail **arr, int i, int num, int max_index, int min_index) {
   }
 }
 
-void sort_insert(detail **arr, int size,
-                 int (*cmp)(const void *, const void *)) {
+void sort_selection(detail **arr, int size,
+                    int (*cmp)(const void *, const void *)) {
   detail *maximum = 0;
   detail *minimum = 0;
   int maximum_ind = 0;

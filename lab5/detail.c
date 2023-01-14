@@ -187,11 +187,10 @@ detail **read_details_from_file(int *size, const char *filename) {
 
   int arr_capacity = 1;
   int arr_count = 0;
-  // читаем строчку за строчкой, strtok()
 
   while (!feof(fp)) {
     line = getstr(fp);
-    // printf("getline: %s\n", line);
+    printf("getline: %s\n", line);
     detail *d = detail_from_str(line);
     if (arr_count + 1 > arr_capacity) {
       arr_capacity *= 2;
