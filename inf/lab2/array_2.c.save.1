@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int *input_array(int *len_p) {
+  *len_p = 0;
+  while (*len_p <= 0) {
+    printf("Input arrays length:\n");
+    scanf("%d", len_p);
+  }
+
+  int *arr = (int *)malloc(*len_p * sizeof(int));
+  // 0 means false, not 0 means true
+  if (!arr) { // same: if (arr == NULL)
+    printf("malloc error\n");
+    return NULL; // нулевой адрес/указатель
+  } else {
+    for (int i = 0; i < *len_p; ++i) {
+      scanf("%d", &arr[i]);
+    }
+    return arr;
+  }
+}
+

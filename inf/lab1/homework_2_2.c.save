@@ -1,0 +1,30 @@
+#include <stdio.h>
+#include <math.h>
+
+float my_sin(float x){
+    double e = 10e-5, s = x, p = x;
+    int i = 3;
+    while (1) {
+      p *= -x*x/((i-1)*i);
+      printf("p = %lf, i = %d\n", p, i);
+      if (fabs(p) < e) {
+        break;
+      }
+      s += p;
+      printf("s = %lf\n", s);
+      i += 2;
+    }
+    return s;
+}
+
+int main(){
+    double x;
+    int n;
+    printf("Enter numbers:\n");
+    scanf("%lf", &x);
+    float s = my_sin(x);
+    printf("%.14lf\n", s);
+    double r = sin(x);
+    printf("%.14lf\n", r);
+    return 0;
+}
