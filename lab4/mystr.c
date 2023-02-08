@@ -30,6 +30,7 @@ char* mystrcpy(char* dest, const char* src) {
 //              _ = ptr
 // s = "abc0"
 //      _ = s
+
 char* mystrcat(char* dest, const char* s) {
   char* ptr = dest + mystrlen(dest);  //
   while (*s != '\0') {  // пока не признак конца строки
@@ -38,4 +39,36 @@ char* mystrcat(char* dest, const char* s) {
   *ptr = '\0';  // после выполнения цикла в строке нет признака окончания
                 // строки; присвоим признак окон. строки
   return dest;
+}
+
+char* mystringchar(const char* string, const char ch) {
+  for (; *string != 0 && *string != ch; string++) {
+  }
+  return *string == 0 ? NULL : (char*)string;
+}
+
+char* mystrtok(char* string, const char* delims) {
+  static char* nexttok;
+
+  if (string != 0) {
+    nexttok = string;
+    for (; *nexttok != '\0' && mystringchar(delims, *nexttok);
+         *nexttok++ = '\0') {
+    }  // now next points to the first non-delimiter char (or '\0')
+  }
+
+  if (*nexttok == '\0') {
+    return NULL;
+  }
+
+  else {
+    //    abc\0\0\0\01234\0
+    string = nexttok;
+    for (; *nexttok != '\0' && mystringchar(delims, *nexttok) == NULL;
+         nexttok++) {
+    }
+    for (; *nexttok != '\0' && mystringchar(delims, *nexttok); *nexttok++ = 0) {
+    }
+    return string;
+  }
 }
