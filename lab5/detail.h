@@ -10,8 +10,9 @@ typedef struct detail {
 detail *create_detail(const char *id, const char *name, int count);
 void free_detail(detail *det);
 void print_detail(detail *det);
-detail *detail_from_str(const char *str);
-char *detail_to_str(const detail *d);
+detail *detail_from_str(
+    const char *str);  // разбить строчку на токены для деталей
+char *detail_to_str(const detail *d);  // сохранить в файл
 detail *rand_detail();
 detail **rand_detail_array(int n);
 void free_detail_array(detail **arr, int size);
