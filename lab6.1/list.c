@@ -15,14 +15,14 @@ void list_delete(List *list) {
   free(list);
 }
 
-void items_print(const Item *ptr) {
-  printf("\"");
-  while (ptr) {
-    printf("%c", ptr->data);
-    ptr = ptr->next;
-  }
-  printf("\"\n");
-}
+// void items_print(const Item *ptr) {
+//   printf("\"");
+//   while (ptr) {
+//     printf("%c", ptr->data);
+//     ptr = ptr->next;
+//   }
+//   printf("\"\n");
+// }
 
 void list_print(const List *list) {
   printf("\"");

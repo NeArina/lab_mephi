@@ -16,7 +16,7 @@ void list_delete(List *list);
 
 void list_print(const List *list);
 
-void items_print(const Item *ptr);
+// void items_print(const Item *ptr);
 
 int list_push_back(List *list, char data);
 
